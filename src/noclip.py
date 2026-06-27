@@ -138,6 +138,12 @@ KEY_MAP = {
     "space": pygame.K_SPACE,
     "escape": pygame.K_ESCAPE,
 }
+bigthing = space_001
+
+
+def switchbig(path):
+    global bigthing
+    bigthing = space_001.returnchild(path)
 
 def initialize(dimension) -> None:
     global screen, clock, dt, running
@@ -169,6 +175,8 @@ def setupgame() -> None:
 
 
 def internalupdategame(logic) -> None:
+    bigthing.x = centerX(space_001.width, bigthing.width)
+    bigthing.y = centerY(space_001.height, bigthing.height)
     logic()
 
 def updategame() -> None:
@@ -188,17 +196,16 @@ def blitthing(t, parent) -> None:
         blitthing(child, t)
 
 def internaldrawgame(draw) -> None:
+    screen.fill((255, 255, 255))
     draw()
-
-    for t in space_001.children:
-        blitthing(t, space_001)
+    blitthing(bigthing, space_001)
 
 def drawgame() -> None:
     pass
 
 def setopacity(surface, percent):
     s = surface.copy()
-    s.set_alpha(255 * percent / 100)
+    s.fill((255, 255, 255, int(255 * percent / 100)), special_flags=pygame.BLEND_RGBA_MULT)
     return s
 
 def loadimage(path: str):
