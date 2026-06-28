@@ -1,5 +1,5 @@
 # NoClip
-"a relatively simple game engine made because pygame is lowk mid"
+a relatively simple game engine made because pygame is lowk mid
 
 ## Main Ideas
 Everything you create is called a `thing`. The container for a bunch of `thing` is also just a `thing`, in other words the so called [scene](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html) idea from Godot is also just a `thing` here.
