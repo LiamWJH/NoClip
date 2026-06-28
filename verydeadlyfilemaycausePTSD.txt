@@ -1,4 +1,3 @@
-asset management - dont duplicate load keep code clean
 
 animation system eg
 self.anim.play("run")
@@ -7,7 +6,6 @@ self.image = self.anim.frame()
 
 simple UI objects like button
 
-audio manager
 
 particle system that lets u control
 position
