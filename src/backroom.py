@@ -6,13 +6,13 @@ noclip.initialize((1280, 720))
 def setupgame():
     global basespace
     basespace = noclip.space_001
-    img = noclip.setopacity(noclip.loadimage("assets/backrooms.jpg"), 100)
-    img2 = noclip.setopacity(noclip.loadimage("assets/bacteria.png"), 20)
-    x = noclip.centerX(basespace.width, img.width)
-    y = noclip.centerY(basespace.height, img.height)
-    basespace.newchild(noclip.thing("shit2", (x, y), img2))
+    noclip.assets.image("backrooms", fileformat="jpg")
+    noclip.assets.image("bacteria", fileformat="png")
+    x = noclip.centerX(basespace.width, noclip.assets.image("backrooms").width)
+    y = noclip.centerY(basespace.height, noclip.assets.image("bacteria").height)
+    basespace.newchild(noclip.thing("shit2", (x, y), noclip.assets.image("bacteria")))
     basespace.returnchild("shit2").add_timer("flasheffect")
-    basespace.newchild(noclip.thing("shit", (x, y), img))
+    basespace.newchild(noclip.thing("shit", (x, y), noclip.assets.image("backrooms")))
 
     def shit2_update(self):
         self.timer["flasheffect"] += noclip.dt
