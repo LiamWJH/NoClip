@@ -23,19 +23,12 @@ class view:
         self.distance = distance
     def move_view_xy(self, N):
         direction, distance = N
-        if x < 0:
-            x = distance * math.cos(360 + direction)
-        else:
-            x = distance * math.cos(direction)
-        if y < 0:
-            y = distance * math.sin(360 + direction)
-        else:
-            y = distance * math.sin(direction)
-        self.x += x
-        self.y += y
+        rad = math.radians(direction)
+        self.x += distance * math.sin(rad)
+        self.y -= distance * math.cos(rad)
     def move_view_z(self, distance):
         self.distance += distance
-
+camera = view((0,0), 1)
 class thing:
     def __init__(self, name, coords, shape):
         self.name = name
@@ -61,14 +54,14 @@ class thing:
     def setsize(self, w, h):
         self.width, self.height = w, h
 
-    def AABB(self):
-        x2 = self.x + self.width
-        y2 = self.y + self.height
-        return {"x1": self.x, "x2": x2, "y1": self.y, "y2": y2}
+    def AABB(self, scaled=False):
+        w = self.width * (camera.distance if scaled else 1)
+        h = self.height * (camera.distance if scaled else 1)
+        return {"x1": self.x, "x2": self.x + w, "y1": self.y, "y2": self.y + h}
 
     def overlapswith(self, t):
-        a = self.AABB()
-        b = t.AABB()
+        a = self.AABB(scaled=True)
+        b = t.AABB(scaled=True)
         return (
             a["x1"] < b["x2"] and
             a["x2"] > b["x1"] and
@@ -222,17 +215,18 @@ def updategame() -> None:
 
 
 def blitthing(t, parent) -> None:
-    abs_x = parent.x + t.x
-    abs_y = parent.y + t.y
-    if t.shape == None:
-        print("missing texture at", abs_x, abs_y)
+    scaled_w = int(t.width * camera.distance)
+    scaled_h = int(t.height * camera.distance)
+    abs_x = parent.x + t.x - camera.x - (scaled_w - t.width) / 2
+    abs_y = parent.y + t.y - camera.y - (scaled_h - t.height) / 2
+    if t.shape is None:
         screen.blit(setopacity(loadimage("internal_assets/missing_texture.jpg"), 10), (abs_x, abs_y))
     else:
-        screen.blit(t.shape, (abs_x, abs_y))
-
+        scaled = pygame.transform.scale(t.shape, (scaled_w, scaled_h))
+        screen.blit(scaled, (abs_x, abs_y))
     for child in t.children:
         blitthing(child, t)
-
+        
 def internaldrawgame(draw) -> None:
     screen.fill((255, 255, 255))
     draw()
