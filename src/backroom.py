@@ -7,7 +7,7 @@ def setupgame():
     global basespace
     basespace = noclip.space_001
     img = noclip.setopacity(noclip.loadimage("assets/backrooms.jpg"), 100)
-    img2 = noclip.setopacity(noclip.loadimage("assets/bacteria.png"), 80)
+    img2 = noclip.setopacity(noclip.loadimage("assets/bacteria.png"), 20)
     x = noclip.centerX(basespace.width, img.width)
     y = noclip.centerY(basespace.height, img.height)
     basespace.newchild(noclip.thing("shit2", (x, y), img2))
@@ -26,4 +26,10 @@ def setupgame():
 def update():
     if noclip.keyPressed("space"):
         noclip.switchbig("shit2")
+    if noclip.keyPressed("right"):
+        noclip.camera.move_view_xy((90, 3))
+    if noclip.keyPressed("left"):
+        noclip.camera.move_view_xy((-90, 3))
+    if noclip.keyPressed("down"):
+        noclip.camera.move_view_z(0.01)
 noclip.run(setupgame, update)
