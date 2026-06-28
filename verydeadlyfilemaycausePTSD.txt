@@ -1,0 +1,29 @@
+asset management - dont duplicate load keep code clean
+
+animation system eg
+self.anim.play("run")
+self.anim.update(dt)
+self.image = self.anim.frame()
+
+simple UI objects like button
+
+audio manager
+
+particle system that lets u control
+position
+velocity
+lifetime
+color
+size
+gravity
+fade
+
+saveload system
+save.set("coins", 120)
+save.get("coins", 0)
+save.write()
+
+factory system
+scene.spawn("slime", x=200, y=100)
+Or
+engine.prefabs.register("slime", Slime)
