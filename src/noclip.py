@@ -24,6 +24,15 @@ class thing:
         self.width, self.height = self.size()
         self.children = []
 
+        self.update = None
+        self.timer = {}
+
+    def add_timer(self, name):
+        self.timer[name] = 0
+
+    def do_updates(self):
+        self.update()
+
     def size(self):
         if self.shape is None:
             return (32, 32)
@@ -64,7 +73,6 @@ class thing:
             return found
         return found.returnchild(parts[1])
 
-
 def centerX(w1, w2):
     return w1 / 2 - w2 / 2
 def centerY(h1, h2):
@@ -72,6 +80,11 @@ def centerY(h1, h2):
 
 
 space_001 = thing("space-001", (0, 0), None)
+
+def space_001_update(self):
+    bigthing.x = centerX(space_001.width, bigthing.width)
+    bigthing.y = centerY(space_001.height, bigthing.height)
+space_001.update = space_001_update
 
 KEY_MAP = {
     "`": pygame.K_BACKQUOTE,
@@ -174,9 +187,14 @@ def setupgame() -> None:
     pass
 
 
+def do_updates_for_things(t):
+    if t.update:
+        t.update(t)
+    for child in t.children:
+        do_updates_for_things(child)
+
 def internalupdategame(logic) -> None:
-    bigthing.x = centerX(space_001.width, bigthing.width)
-    bigthing.y = centerY(space_001.height, bigthing.height)
+    do_updates_for_things(space_001)
     logic()
 
 def updategame() -> None:
@@ -227,7 +245,7 @@ def run(setup=setupgame, update=updategame, draw=drawgame) -> None:
         didQuit()
         internalupdategame(update)
         internaldrawgame(draw)
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(240) / 1000
         pygame.display.flip()
     pygame.quit()
 
