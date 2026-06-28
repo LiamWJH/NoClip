@@ -7,6 +7,37 @@ clock = None
 dt = 0
 running = True
 
+class Assets:
+    def __init__(self):
+        self.images = {}
+        self.sounds = {}
+        self.fonts = {}
+    def image(self, *names, fileformat="png"):
+        buffer = []
+        for name in names:
+            if name not in self.images:
+                img = pygame.image.load(f"assets/{name}.{fileformat}")
+                self.images[name] = (img.convert_alpha() if img.get_alpha() is not None else img.convert())
+            buffer.append(self.images[name])
+        return buffer[0] if len(buffer) == 1 else buffer
+    def sound(self, *names, fileformat="ogg"):
+        buffer = []
+        for name in names:
+            if name not in self.sounds:
+                self.sounds[name] = (pygame.mixer.Sound(f"assets/{name}.{fileformat}"))
+            buffer.append(self.sounds[name])
+        return buffer[0] if len(buffer) == 1 else buffer
+    def music(self, name, fileformat="wav"):
+        pygame.mixer.music.load(f"assets/{name}.{fileformat}")
+        pygame.mixer.music.play(-1)
+    def font(self, *names, fileformat="ttf"):
+        buffer = []
+        for name in names:
+            if name not in self.fonts:
+                self.fonts[name] = (pygame.font.Font(f"assets/{name}.{fileformat}", 32))
+            buffer.append(self.fonts[name])
+        return buffer[0] if len(buffer) == 1 else buffer
+assets = Assets()
 
 class Err(Exception):
     def __init__(self, err, msg):
@@ -226,7 +257,7 @@ def blitthing(t, parent) -> None:
         screen.blit(scaled, (abs_x, abs_y))
     for child in t.children:
         blitthing(child, t)
-        
+
 def internaldrawgame(draw) -> None:
     screen.fill((255, 255, 255))
     draw()
