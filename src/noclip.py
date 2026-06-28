@@ -1,5 +1,6 @@
 import pygame
-import os
+import math, os
+
 
 screen = None
 clock = None
@@ -15,6 +16,25 @@ class Err(Exception):
         print(f"{self.__class__.__name__} Error: \n'{self.err}': {self.msg}")
 
 class NoExistError(Err): pass
+
+class view:
+    def __init__(self, coords, distance):
+        self.x, self.y = coords
+        self.distance = distance
+    def move_view_xy(self, N):
+        direction, distance = N
+        if x < 0:
+            x = distance * math.cos(360 + direction)
+        else:
+            x = distance * math.cos(direction)
+        if y < 0:
+            y = distance * math.sin(360 + direction)
+        else:
+            y = distance * math.sin(direction)
+        self.x += x
+        self.y += y
+    def move_view_z(self, distance):
+        self.distance += distance
 
 class thing:
     def __init__(self, name, coords, shape):
