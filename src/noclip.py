@@ -20,12 +20,18 @@ class Assets:
                 self.images[name] = (img.convert_alpha() if img.get_alpha() is not None else img.convert())
             buffer.append(self.images[name])
         return buffer[0] if len(buffer) == 1 else buffer
-    def sound(self, *names, fileformat="ogg"):
+    def sound(self, *names, fileformat="wav", volume=None):
         buffer = []
+
         for name in names:
             if name not in self.sounds:
-                self.sounds[name] = (pygame.mixer.Sound(f"assets/{name}.{fileformat}"))
+                self.sounds[name] = pygame.mixer.Sound(f"assets/{name}.{fileformat}")
+
+            if volume is not None:
+                self.sounds[name].set_volume(volume)
+
             buffer.append(self.sounds[name])
+
         return buffer[0] if len(buffer) == 1 else buffer
     def music(self, name, fileformat="wav"):
         pygame.mixer.music.load(f"assets/{name}.{fileformat}")
@@ -38,6 +44,7 @@ class Assets:
             buffer.append(self.fonts[name])
         return buffer[0] if len(buffer) == 1 else buffer
 assets = Assets()
+
 
 class Err(Exception):
     def __init__(self, err, msg):
@@ -60,6 +67,7 @@ class view:
     def move_view_z(self, distance):
         self.distance += distance
 camera = view((0,0), 1)
+
 class thing:
     def __init__(self, name, coords, shape):
         self.name = name
@@ -206,6 +214,7 @@ def initialize(dimension) -> None:
     global screen, clock, dt, running
     width, height = dimension
     pygame.init()
+    pygame.mixer.init()
     screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
     space_001.setsize(*screen.get_size())
     clock = pygame.time.Clock()
@@ -288,14 +297,39 @@ def run(setup=setupgame, update=updategame, draw=drawgame) -> None:
     internalsetupgame(setup)
     while running:
         didQuit()
+        update_input()
         internalupdategame(update)
         internaldrawgame(draw)
         dt = clock.tick(240) / 1000
         pygame.display.flip()
     pygame.quit()
 
+_keys_now = {}
+_keys_prev = {}
+
+
+def update_input():
+    global _keys_now, _keys_prev
+
+    pygame.event.pump()
+
+    _keys_prev = _keys_now.copy()
+
+    pressed = pygame.key.get_pressed()
+
+    _keys_now = {
+        name: pressed[keycode]
+        for name, keycode in KEY_MAP.items()
+    }
+
+
 def keyPressed(key: str) -> bool:
-    k = KEY_MAP.get(key)
-    if k is None:
-        return False
-    return pygame.key.get_pressed()[k]
+    return _keys_now.get(key, False)
+
+
+def keyJustPressed(key: str) -> bool:
+    return _keys_now.get(key, False) and not _keys_prev.get(key, False)
+
+
+def keyJustReleased(key: str) -> bool:
+    return not _keys_now.get(key, False) and _keys_prev.get(key, False)
