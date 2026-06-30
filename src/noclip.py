@@ -250,9 +250,16 @@ def switchbig(path):
     global bigthing
     bigthing = space_001.returnchild(path)
 
-def initialize(dimension) -> None:
+def initialize(name="noclip game", dimension=(1280, 720), icon=None) -> None:
     global screen, clock, dt, running
     width, height = dimension
+    pygame.display.set_caption(name)
+    if icon == None:
+        icon_image = pygame.image.load('internal_assets/icon.png')
+        pygame.display.set_icon(icon_image)
+    else:
+        icon_image = pygame.image.load(icon)
+        pygame.display.set_icon(icon_image)
     pygame.init()
     pygame.mixer.init()
     screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
