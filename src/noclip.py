@@ -1,11 +1,45 @@
 import pygame
 import math, os
-
+import json
 
 screen = None
 clock = None
 dt = 0
 running = True
+
+class Globalvars:
+    def __init__(self):
+        pass
+
+class Save:
+    def __init__(self, savedir):
+        self.savedir = savedir
+        self.valuecache = {}
+        self.path = os.path.join(self.savedir, "save.json")
+        os.makedirs(self.savedir, exist_ok=True)
+
+    def set(self, key, val):
+        self.valuecache[key] = val
+
+    def get(self, key):
+        if key in self.valuecache:
+            return self.valuecache[key]
+        with open(self.path, "r") as f:
+            data = json.loads(f.read())
+        self.valuecache[key] = data[key]
+        return self.valuecache[key]
+
+    def write(self):
+        try:
+            with open(self.path, "r") as f:
+                existing = json.loads(f.read())
+        except (FileNotFoundError, json.JSONDecodeError):
+            existing = {}
+        existing.update(self.valuecache)
+        with open(self.path, "w") as f:
+            f.write(json.dumps(existing))
+
+
 
 class Assets:
     def __init__(self):
@@ -239,7 +273,9 @@ def didQuit() -> bool:
     return running
 
 
-def internalsetupgame(setupgame) -> None:
+def internalsetupgame(setupgame):
+    global globalvars
+    globalvars = Globalvars()
     setupgame()
 
 def setupgame() -> None:
