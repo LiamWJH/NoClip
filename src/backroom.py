@@ -2,7 +2,7 @@ import pygame
 import noclip
 import random
 
-noclip.initialize((1280, 720))
+noclip.initialize()
 
 def setupgame():
     global basespace
