@@ -21,9 +21,4 @@ save.set("coins", 120)
 save.get("coins", 0)
 save.write()
 
-factory system
-scene.spawn("slime", x=200, y=100)
-Or
-engine.prefabs.register("slime", Slime)
-
 and the deadliest of them all... add comments above functions for d.o.c.u.m.e.n.t.a.t.i.o.n. p.u.r.p.o.s.e
