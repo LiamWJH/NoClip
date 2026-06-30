@@ -79,6 +79,12 @@ class thing:
         self.update = None
         self.timer = {}
 
+    def spawn(self, model, x, y):
+        model.x = x
+        model.y = y
+        self.newchild(model)
+
+
     def add_timer(self, name):
         self.timer[name] = 0
 
@@ -260,7 +266,7 @@ def blitthing(t, parent) -> None:
     abs_x = parent.x + t.x - camera.x - (scaled_w - t.width) / 2
     abs_y = parent.y + t.y - camera.y - (scaled_h - t.height) / 2
     if t.shape is None:
-        screen.blit(setopacity(loadimage("internal_assets/missing_texture.jpg"), 10), (abs_x, abs_y))
+        screen.blit(_, (abs_x, abs_y))
     else:
         scaled = pygame.transform.scale(t.shape, (scaled_w, scaled_h))
         screen.blit(scaled, (abs_x, abs_y))
@@ -300,7 +306,7 @@ def run(setup=setupgame, update=updategame, draw=drawgame) -> None:
         update_input()
         internalupdategame(update)
         internaldrawgame(draw)
-        dt = clock.tick(240) / 1000
+        dt = clock.tick(500) / 1000
         pygame.display.flip()
     pygame.quit()
 
