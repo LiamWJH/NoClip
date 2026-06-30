@@ -1,5 +1,6 @@
 import pygame
 import noclip
+import random
 
 noclip.initialize((1280, 720))
 
@@ -8,6 +9,7 @@ def setupgame():
     basespace = noclip.space_001
     noclip.assets.image("backrooms", fileformat="jpg")
     noclip.assets.image("bacteria", fileformat="png")
+    noclip.assets.image("trash", fileformat="png")
     noclip.assets.sound("fah", fileformat="mp3")
     x = noclip.centerX(basespace.width, noclip.assets.image("backrooms").width)
     y = noclip.centerY(basespace.height, noclip.assets.image("bacteria").height)
@@ -24,6 +26,7 @@ def setupgame():
     basespace.returnchild("shit2").update = shit2_update
     noclip.switchbig("shit")
 
+
 def update():
     if noclip.keyJustPressed("space"):
         noclip.switchbig("shit2")
@@ -34,4 +37,10 @@ def update():
         noclip.camera.move_view_xy((-90, 3))
     if noclip.keyPressed("down"):
         noclip.camera.move_view_z(0.01)
+    if noclip.keyPressed("up"):
+        x = random.randint(0, noclip.bigthing.width)
+        y = random.randint(0, noclip.bigthing.height)
+        print(x,y)
+        trash = noclip.thing("trash", (0,0), noclip.assets.image("trash"))
+        noclip.bigthing.spawn(trash, x, y)
 noclip.run(setupgame, update)
