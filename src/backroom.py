@@ -17,6 +17,10 @@ def setupgame():
     basespace.returnchild("shit2").add_timer("flasheffect")
     basespace.newchild(noclip.thing("shit", (x, y), noclip.assets.image("backrooms")))
 
+    noclip.globalvars.increment = 0
+
+
+
     def shit2_update(self):
         self.timer["flasheffect"] += noclip.dt
         if self.timer["flasheffect"] > 0.3:
@@ -43,4 +47,10 @@ def update():
         print(x,y)
         trash = noclip.thing("trash", (0,0), noclip.assets.image("trash"))
         noclip.bigthing.spawn(trash, x, y)
+    if noclip.keyPressed("leftshift"):
+        noclip.globalvars.increment += 1
+
 noclip.run(setupgame, update)
+save = noclip.Save("C:/coding/projects/noclip/src/save")
+save.set("increment", noclip.globalvars.increment)
+save.write()
